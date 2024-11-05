@@ -1,7 +1,7 @@
 import psutil
-import time
 import tkinter
 
+##get system status
 def get_cpu():
     return psutil.cpu_percent(interval=1)
 
@@ -15,31 +15,42 @@ def get_network():
     net_io = psutil.net_io_counters()
     return net_io.bytes_sent, net_io.bytes_recv
 
+##update system status
 def get_status():
     cpu = get_cpu()
     memory = get_memory()
     disk = get_disk()
     bytes_sent, bytes_recv = get_network()
-    return cpu, memory, disk, bytes_sent, bytes_recv
 
+    cpu_label.config(text=f"CPU   使用率: {cpu}%")
+    memory_label.config(text=f"記憶體使用率: {memory}%")
+    disk_label.config(text=f"硬碟  使用率: {disk}%")
+    bytes_sent_label.config(text=f"封包發送: {bytes_sent} Bytes")
+    bytes_recv_label.config(text=f"封包接收: {bytes_recv} Bytes")
+
+    window.after(1000, get_status) 
+
+##create window
 window = tkinter.Tk()
 window.title("系統監控")
 window.geometry("300x200")
 window.resizable(False, False)
-window.iconbitmap("icon.ico")
+window.attributes("-topmost", True)
+window.attributes("-alpha", 0.8)
+#window.iconbitmap("icon.ico")
+window.overrideredirect(True)
 
 cpu_label = tkinter.Label(window, text="CPU   使用率: ", font=("Arial", 12), bg="white", fg="black")
 cpu_label.pack()
+memory_label = tkinter.Label(window, text="記憶體使用率: ", font=("Arial", 12), bg="white", fg="black")
+memory_label.pack()
+disk_label = tkinter.Label(window, text="硬碟  使用率: ", font=("Arial", 12), bg="white", fg="black")
+disk_label.pack()
+bytes_sent_label = tkinter.Label(window, text="封包發送: ", font=("Arial", 12), bg="white", fg="black")
+bytes_sent_label.pack()
+bytes_recv_label = tkinter.Label(window, text="封包接收: ", font=("Arial", 12), bg="white", fg="black")
+bytes_recv_label.pack()
+
+get_status()
 
 window.mainloop()
-
-while True:
-    
-    print(f"CPU   使用率: {cpu}%")
-    print(f"記憶體使用率: {memory}%")
-    print(f"硬碟  使用率: {disk}%")
-    print(f"封包發送: {bytes_sent} Bytes")
-    print(f"封包接收: {bytes_recv} Bytes")
-    print("-" * 30)
-    
-    #time.sleep(1)
