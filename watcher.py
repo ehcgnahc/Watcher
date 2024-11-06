@@ -1,7 +1,14 @@
 import psutil
 import GPUtil
-import wmi
 import tkinter
+import sys
+import os
+
+##get picture path
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
 
 ##get system status
 def get_cpu():
@@ -50,7 +57,7 @@ window.attributes("-transparentcolor", "black")
 window.overrideredirect(True)
 
 ##transparent background
-background_image = tkinter.PhotoImage(file="background.png")
+background_image = tkinter.PhotoImage(file=resource_path("background.png"))
 background_label = tkinter.Label(window, image=background_image, bg="black")
 background_label.place(x=0, y=0)
 
